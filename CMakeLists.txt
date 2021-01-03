@@ -1,23 +1,23 @@
 cmake_minimum_required(VERSION 3.17)
 project(nginx)
 
-set(CMAKE_CXX_STANDARD 14)
+#set(CMAKE_C_STANDARD 99)
+set(CMAKE_C_FLAGS "-pipe  -O -Wall -Wextra -Wpointer-arith -Wconditional-uninitialized -Wno-unused-parameter -Wno-deprecated-declarations -Werror -g")
 
-include_directories(objs)
-include_directories(src/core)
-include_directories(src/event)
-include_directories(src/event/modules)
-include_directories(src/http)
-include_directories(src/http/modules)
-include_directories(src/http/modules/perl)
-include_directories(src/http/v2)
-include_directories(src/mail)
-include_directories(src/os/unix)
-#include_directories(src/os/win32)
-include_directories(src/stream)
-include_directories(/usr/local/include/)
+#add_definitions(-DNGX_HTTP_UPSYNC_MODULE=0)
 
-add_executable(nginx
+include_directories(
+        src/core
+        src/event
+        src/event/modules
+        src/http
+        src/http/modules
+        src/os
+        src/os/unix
+        objs
+        /usr/local/include)
+
+set(SOURCE_FILES
         /usr/local/include/pcre.h
         objs/ngx_auto_config.h
         objs/ngx_auto_headers.h
@@ -104,8 +104,6 @@ add_executable(nginx
         src/event/modules/ngx_kqueue_module.c
         src/event/modules/ngx_poll_module.c
         src/event/modules/ngx_select_module.c
-#        src/event/modules/ngx_win32_poll_module.c
-#        src/event/modules/ngx_win32_select_module.c
         src/event/ngx_event.c
         src/event/ngx_event.h
         src/event/ngx_event_accept.c
@@ -300,40 +298,6 @@ add_executable(nginx
         src/os/unix/ngx_user.c
         src/os/unix/ngx_user.h
         src/os/unix/ngx_writev_chain.c
-#        src/os/win32/ngx_alloc.c
-#        src/os/win32/ngx_alloc.h
-#        src/os/win32/ngx_atomic.h
-#        src/os/win32/ngx_dlopen.c
-#        src/os/win32/ngx_dlopen.h
-#        src/os/win32/ngx_errno.c
-#        src/os/win32/ngx_errno.h
-#        src/os/win32/ngx_event_log.c
-#        src/os/win32/ngx_files.c
-#        src/os/win32/ngx_files.h
-#        src/os/win32/ngx_os.h
-#        src/os/win32/ngx_process.c
-#        src/os/win32/ngx_process.h
-#        src/os/win32/ngx_process_cycle.c
-#        src/os/win32/ngx_process_cycle.h
-#        src/os/win32/ngx_service.c
-#        src/os/win32/ngx_shmem.c
-#        src/os/win32/ngx_shmem.h
-#        src/os/win32/ngx_socket.c
-#        src/os/win32/ngx_socket.h
-#        src/os/win32/ngx_stat.c
-#        src/os/win32/ngx_thread.c
-#        src/os/win32/ngx_thread.h
-#        src/os/win32/ngx_time.c
-#        src/os/win32/ngx_time.h
-#        src/os/win32/ngx_udp_wsarecv.c
-#        src/os/win32/ngx_user.c
-#        src/os/win32/ngx_user.h
-#        src/os/win32/ngx_win32_config.h
-#        src/os/win32/ngx_win32_init.c
-#        src/os/win32/ngx_wsarecv.c
-#        src/os/win32/ngx_wsarecv_chain.c
-#        src/os/win32/ngx_wsasend.c
-#        src/os/win32/ngx_wsasend_chain.c
         src/stream/ngx_stream.c
         src/stream/ngx_stream.h
         src/stream/ngx_stream_access_module.c
@@ -366,3 +330,6 @@ add_executable(nginx
         src/stream/ngx_stream_variables.h
         src/stream/ngx_stream_write_filter_module.c)
 
+
+add_executable(nginx ${SOURCE_FILES})
+target_link_libraries(nginx -lpcre -lz)
