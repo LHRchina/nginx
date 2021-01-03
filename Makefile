@@ -1,6 +1,8 @@
 
 default:	build
 
+all: build
+
 clean:
 	rm -rf objs
 
