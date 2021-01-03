@@ -1,0 +1,5 @@
+cmake-build-debug
+objs/src
+objs/nginx
+objs/ngx_modules.o
+.idea
